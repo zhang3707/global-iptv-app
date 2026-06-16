@@ -1,0 +1,48 @@
+name: 🚀 Flutter 自动编译云端打包大坝
+
+# 📡 触发机制：只要你往主分支 push 代码，或者手动在网页上点按钮，云端立刻通电！
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: 🤖 物理打包原生 Android APK
+    runs-on: ubuntu-latest # 白嫖 GitHub 的 Linux 纯净高性能服务器
+
+    steps:
+      # 1. 物理拉取你推上云端的 Flutter 客户端代码
+      - name: 📂 Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. 强行安装 Java 工业底座（安卓编译必须）
+      - name: ☕ Setup Java Environment
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. 物理并网谷歌官方的纯净 Flutter 开发环境
+      - name: 🎯 Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x' # 自动咬合你本地的 3.x 开发主干
+          channel: 'stable'
+          cache: true # 开启狂暴缓存，下次打包速度翻倍
+
+      # 4. 同步公网依赖锁（把 http 和 video_player 拽下来）
+      - name: 📦 Sync Dependencies
+        run: flutter pub get
+
+      # 5. 云端高能点火！物理构建完全体 APK
+      # 使用 --no-tree-shake-icons 强行防止第三方图标库被优化导致报错，极度高容错！
+      - name: 🪓 Build Release APK
+        run: flutter build apk --release --no-tree-shake-icons
+
+      # 6. 把热乎的物理安装包做成"成品产物"供你点击下载
+      - name: 📤 Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Global-IPTV-Release-APK # 下载出来的压缩包名字
+          path: build/app/outputs/flutter-apk/app-release.apk # 精准锁定物理成品包路径
