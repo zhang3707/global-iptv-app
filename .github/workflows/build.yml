@@ -27,7 +27,6 @@ jobs:
       - name: 🎯 Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.x' # 自动咬合你本地的 3.x 开发主干
           channel: 'stable'
           cache: true # 开启狂暴缓存，下次打包速度翻倍
 
