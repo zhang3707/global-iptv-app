@@ -27,13 +27,13 @@ class IptvService {
 
   Future<List<Channel>> fetchChannels(String countryCode) async {
     try {
-      // 🔔 强制转换为小写，确保与 Worker 端匹配
-      final lowerCaseCountry = countryCode.toLowerCase();
-      final gatewayUrl = "$_baseUrl?country=$lowerCaseCountry";
+      // 🔔 工业级容错：强行去除两端空格，并全量转换为纯小写！确保和 Worker 完美咬合！
+      final safeCountry = countryCode.trim().toLowerCase();
+      final gatewayUrl = "$_baseUrl?country=$safeCountry";
       
       // 📡 打印完整请求URL，方便调试
       print("🌐 正在请求: $gatewayUrl");
-      print("📦 原始国家代码: $countryCode → 转换后: $lowerCaseCountry");
+      print("📦 原始国家代码: '$countryCode' → 安全转换后: '$safeCountry'");
       
       final response = await http.get(Uri.parse(gatewayUrl));
 
