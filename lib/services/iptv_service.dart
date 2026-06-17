@@ -25,8 +25,8 @@ class IptvService {
   static Future<List<Channel>> getChannels(String country) async {
     String safeCountry = country.trim().toLowerCase();
     
-    // 🎯 物理直连亲手复活、全网免封锁的黄金二级域名
-    var url = Uri.parse("https://gjtv.zhangjian3707.dpdns.org/fetch?country=$safeCountry");
+    // 🔔 彻底消灭地雷：必须确保外层是标准的【双引号】，让 $safeCountry 真正变成动态的 'cn' 或 'sg'！
+    var url = Uri.parse("https://wandering-snow-7774.zhang37078381.workers.dev/fetch?country=$safeCountry");
 
     final Map<String, String> safeHeaders = {
       "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
