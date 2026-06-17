@@ -26,9 +26,11 @@ class IptvService {
 
   static Future<List<Channel>> getChannels(String country) async {
     String safeCountry = country.trim().toLowerCase();
-    var url = Uri.parse("https://gjtv.zhangjian3707.dpdns.org/fetch?country=$safeCountry");
+    // 🔔 强行用 bb 通道发出请求
+    var url = Uri.parse("https://bb.zhangjian3707.dpdns.org/fetch?country=$safeCountry");
 
     final Map<String, String> safeHeaders = {
+      "Host": "gjtv.zhangjian3707.dpdns.org", // 👈 告诉 CF 真实目的地是 gjtv Worker
       "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
       "Accept": "application/json",
     };
