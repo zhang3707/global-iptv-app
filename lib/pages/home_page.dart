@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadChannels(String countryCode) async {
     try {
       setState(() {
-        debugLog = "正在全力撞击网关：https://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()} ...";
+        debugLog = "正在全力撞击网关：http://tv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()} ...";
         hasError = false;
         _isLoading = true;
       });
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _isLoading = false;
         if (channels == null || channels.isEmpty) {
-          debugLog = "⚠️ 警告：网关通了，但返回的数据竟然是空的（List.isEmpty）！\n\n请求URL:\nhttps://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
+          debugLog = "⚠️ 警告：网关通了，但返回的数据竟然是空的（List.isEmpty）！\n\n请求URL:\nhttp://tv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
           hasError = true;
         } else {
           debugLog = "✅ 成功拉取到 ${channels.length} 个频道！";
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _isLoading = false;
         hasError = true;
-        debugLog = "🚨 抓到核心崩溃地雷！\n\n【错误原因】:\n$e\n\n【崩溃堆栈】:\n$stackTrace\n\n【请求URL】:\nhttps://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
+        debugLog = "🚨 抓到核心崩溃地雷！\n\n【错误原因】:\n$e\n\n【崩溃堆栈】:\n$stackTrace\n\n【请求URL】:\nhttp://tv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
       });
     }
   }
