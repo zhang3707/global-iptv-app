@@ -35,8 +35,8 @@ class _HomePageState extends State<HomePage> {
         _isLoading = true;
       });
 
-      // 调用请求服务
-      final channels = await _iptvService.fetchChannels(countryCode);
+      // 调用请求服务（使用静态方法）
+      final channels = await IptvService.getChannels(countryCode);
       
       setState(() {
         _isLoading = false;
