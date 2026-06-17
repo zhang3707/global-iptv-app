@@ -52,11 +52,16 @@ class IptvService {
         final String rawBody = utf8.decode(response.bodyBytes);
         print("📥 响应内容预览: ${rawBody.substring(0, rawBody.length > 200 ? 200 : rawBody.length)}");
         
+        // 🔔 极其硬核的真机日志雷达：如果返回的数据为空数组或空，强行抛出异常！
+        if (rawBody == "[]" || rawBody.isEmpty) {
+          throw Exception("🚨 网关确实回了空数组！\n状态码: ${response.statusCode}\n原始响应头: ${response.headers}\n响应体: '$rawBody'");
+        }
+        
         final List<dynamic> jsonData = json.decode(rawBody);
         print("✅ 解析成功，频道数量: ${jsonData.length}");
         return jsonData.map((item) => Channel.fromJson(item)).toList();
       } else {
-        throw Exception("网关应答异常: ${response.statusCode}");
+        throw Exception("HTTP 请求失败，状态码: ${response.statusCode}");
       }
     } catch (e) {
       print("📡 网关并网失败: $e");
