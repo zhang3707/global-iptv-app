@@ -35,7 +35,15 @@ class IptvService {
       print("🌐 正在请求: $gatewayUrl");
       print("📦 原始国家代码: '$countryCode' → 安全转换后: '$safeCountry'");
       
-      final response = await http.get(Uri.parse(gatewayUrl));
+      // 🛠️ 强行焊上顶级浏览器伪装，把 Dart 字样彻底抹除！突破网关熔断防护！
+      final Map<String, String> safeHeaders = {
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+      };
+      
+      // 发起带有顶级伪装的网络撞击
+      final response = await http.get(Uri.parse(gatewayUrl), headers: safeHeaders);
 
       print("📥 响应状态码: ${response.statusCode}");
       print("📥 响应体长度: ${response.bodyBytes.length} bytes");
