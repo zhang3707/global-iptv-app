@@ -37,6 +37,9 @@ jobs:
       # 5. 云端高能点火！物理构建完全体 APK
       # 使用 --no-tree-shake-icons 强行防止第三方图标库被优化导致报错，极度高容错！
       - name: 🪓 Build Release APK
+        env:
+          # 🎯 强行命令 Gradle 客户端也吃满内存，不给 R8 任何爆仓的机会
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx3072m -XX:MaxMetaspaceSize=1024m"
         run: flutter build apk --release --no-tree-shake-icons
 
       # 6. 把热乎的物理安装包做成"成品产物"供你点击下载
