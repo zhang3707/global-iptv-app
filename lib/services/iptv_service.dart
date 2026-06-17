@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/channel.dart';
 
 class IptvService {
-  static const String _baseUrl = "https://wandering-snow-7774.zhang37078381.workers.dev/fetch";
+  static const String _baseUrl = "https://gjtv.zhangjian3707.dpdns.org/fetch";
   
   static const Map<String, String> countryCodes = {
     'CN': '中国',
