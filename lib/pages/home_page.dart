@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.black,
         elevation: 0,
         title: Text(
-          '${_iptvService.getCountryName(_selectedCountry)} IPTV',
+          '${IptvService.getCountryName(_selectedCountry)} IPTV',
           style: const TextStyle(color: Colors.white),
         ),
       ),
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
               return ListTile(
                 leading: const Icon(Icons.language, color: Colors.white),
                 title: Text(
-                  _iptvService.getCountryName(country),
+                  IptvService.getCountryName(country),
                   style: TextStyle(
                     color: _selectedCountry == country ? Colors.green : Colors.white,
                     fontWeight: _selectedCountry == country ? FontWeight.bold : FontWeight.normal,
