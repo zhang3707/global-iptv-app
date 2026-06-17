@@ -15,6 +15,10 @@ class _HomePageState extends State<HomePage> {
   String _selectedCountry = 'CN';
   List<Channel> _channels = [];
   bool _isLoading = true;
+  
+  // 1. 黑匣子日志变量
+  String debugLog = "尚未加载数据...";
+  bool hasError = false;
 
   @override
   void initState() {
@@ -22,17 +26,36 @@ class _HomePageState extends State<HomePage> {
     _loadChannels(_selectedCountry);
   }
 
+  // 2. 超高容错数据拉取函数
   Future<void> _loadChannels(String countryCode) async {
-    setState(() {
-      _isLoading = true;
-    });
+    try {
+      setState(() {
+        debugLog = "正在全力撞击网关：https://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()} ...";
+        hasError = false;
+        _isLoading = true;
+      });
 
-    final channels = await _iptvService.fetchChannels(countryCode);
-    
-    setState(() {
-      _channels = channels;
-      _isLoading = false;
-    });
+      // 调用请求服务
+      final channels = await _iptvService.fetchChannels(countryCode);
+      
+      setState(() {
+        _isLoading = false;
+        if (channels == null || channels.isEmpty) {
+          debugLog = "⚠️ 警告：网关通了，但返回的数据竟然是空的（List.isEmpty）！\n\n请求URL:\nhttps://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
+          hasError = true;
+        } else {
+          debugLog = "✅ 成功拉取到 ${channels.length} 个频道！";
+          _channels = channels;
+        }
+      });
+    } catch (e, stackTrace) {
+      // 🔔 极其高能：捕获任何崩溃，变成文字！
+      setState(() {
+        _isLoading = false;
+        hasError = true;
+        debugLog = "🚨 抓到核心崩溃地雷！\n\n【错误原因】:\n$e\n\n【崩溃堆栈】:\n$stackTrace\n\n【请求URL】:\nhttps://gjtv.zhangjian3707.dpdns.org/fetch?country=${countryCode.toLowerCase()}";
+      });
+    }
   }
 
   void _onCountryChanged(String countryCode) {
@@ -164,25 +187,38 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.green),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(12),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.5,
+      // 3. 黑匣子日志渲染：出错时强行吐出日志
+      body: hasError
+          ? SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: SelectableText(
+                debugLog,
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 14,
+                  fontFamily: 'monospace',
                 ),
-                itemCount: _channels.length,
-                itemBuilder: (context, index) {
-                  return buildChannelCard(_channels[index]);
-                },
               ),
-            ),
+            )
+          : _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(color: Colors.green),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.5,
+                    ),
+                    itemCount: _channels.length,
+                    itemBuilder: (context, index) {
+                      return buildChannelCard(_channels[index]);
+                    },
+                  ),
+                ),
     );
   }
 }
