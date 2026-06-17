@@ -1,9 +1,12 @@
 allprojects {
     repositories {
-        // 🎯 强行插队！优先走国内阿里云黄金镜像站，秒级下载，绝对不卡握手！
-        maven { url = java.net.URI("https://maven.aliyun.com/repository/public") }
+        // 🎯 黄金梯队：海外虚拟机优先走官方，本地走国内！谁能通谁先上！
         google()
         mavenCentral()
+        // 腾讯云黄金备载节点
+        maven { url = java.net.URI("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
+        // 修复后的阿里云节点
+        maven { url = java.net.URI("https://maven.aliyun.com/repository/public") }
     }
 }
 
