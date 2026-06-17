@@ -27,11 +27,25 @@ class IptvService {
 
   Future<List<Channel>> fetchChannels(String countryCode) async {
     try {
-      final gatewayUrl = "$_baseUrl?country=${countryCode.toLowerCase()}";
+      // 🔔 强制转换为小写，确保与 Worker 端匹配
+      final lowerCaseCountry = countryCode.toLowerCase();
+      final gatewayUrl = "$_baseUrl?country=$lowerCaseCountry";
+      
+      // 📡 打印完整请求URL，方便调试
+      print("🌐 正在请求: $gatewayUrl");
+      print("📦 原始国家代码: $countryCode → 转换后: $lowerCaseCountry");
+      
       final response = await http.get(Uri.parse(gatewayUrl));
 
+      print("📥 响应状态码: ${response.statusCode}");
+      print("📥 响应体长度: ${response.bodyBytes.length} bytes");
+
       if (response.statusCode == 200) {
-        final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
+        final String rawBody = utf8.decode(response.bodyBytes);
+        print("📥 响应内容预览: ${rawBody.substring(0, rawBody.length > 200 ? 200 : rawBody.length)}");
+        
+        final List<dynamic> jsonData = json.decode(rawBody);
+        print("✅ 解析成功，频道数量: ${jsonData.length}");
         return jsonData.map((item) => Channel.fromJson(item)).toList();
       } else {
         throw Exception("网关应答异常: ${response.statusCode}");
